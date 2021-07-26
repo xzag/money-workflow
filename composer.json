@@ -1,0 +1,29 @@
+{
+    "name": "xzag/money-workflow",
+    "description": "Helps you organize money related code in your application",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Xzag\\MoneyWorkflow\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Xzag\\MoneyWorkflow\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xzag",
+            "email": "alexgoryachkin@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
