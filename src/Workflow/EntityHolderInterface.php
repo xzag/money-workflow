@@ -2,21 +2,21 @@
 
 namespace Xzag\MoneyWorkflow\Workflow;
 
-use Xzag\MoneyWorkflow\Workflow\Exception\EntityException;
+use Xzag\MoneyWorkflow\Workflow\Exception\EntityHolderException;
 
 /**
- * Interface EntityInterface
+ * Interface EntityHolderInterface
  * @package Xzag\MoneyWorkflow\Workflow
  */
-interface EntityInterface
+interface EntityHolderInterface
 {
     /**
-     * @throws EntityException
+     * @throws EntityHolderException
      */
     public function acquire(): void;
 
     /**
-     * @throws EntityException
+     * @throws EntityHolderException
      */
     public function release(): void;
 }

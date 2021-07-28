@@ -8,9 +8,19 @@ namespace Xzag\MoneyWorkflow\Workflow;
  */
 interface WorkflowInterface
 {
-    public function getEntity(): EntityInterface;
+    /**
+     * @return EntityHolderInterface
+     */
+    public function getEntityHolder(): EntityHolderInterface;
 
+    /**
+     * @return StateInterface
+     */
     public function getState(): StateInterface;
 
+    /**
+     * @param StateInterface $state
+     * @return WorkflowInterface
+     */
     public function setState(StateInterface $state): WorkflowInterface;
 }

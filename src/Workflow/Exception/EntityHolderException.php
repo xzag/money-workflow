@@ -3,9 +3,9 @@
 namespace Xzag\MoneyWorkflow\Workflow\Exception;
 
 /**
- * Class EntityException
+ * Class EntityHolderException
  * @package Xzag\MoneyWorkflow\Workflow\Exception
  */
-class EntityException extends WorkflowException
+class EntityHolderException extends WorkflowException
 {
 }

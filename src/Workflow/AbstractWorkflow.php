@@ -2,7 +2,7 @@
 
 namespace Xzag\MoneyWorkflow\Workflow;
 
-use Xzag\MoneyWorkflow\Workflow\Exception\EntityException;
+use Xzag\MoneyWorkflow\Workflow\Exception\EntityHolderException;
 use Xzag\MoneyWorkflow\Workflow\Exception\WorkflowException;
 
 /**
@@ -13,19 +13,19 @@ abstract class AbstractWorkflow implements WorkflowInterface
 {
     /**
      * AbstractWorkflow constructor.
-     * @param EntityInterface $entity
+     * @param EntityHolderInterface $entity
      * @param StateInterface $state
      */
     public function __construct(
-        private EntityInterface $entity,
+        private EntityHolderInterface $entity,
         private StateInterface $state
     ) {
     }
 
     /**
-     * @return EntityInterface
+     * @return EntityHolderInterface
      */
-    public function getEntity(): EntityInterface
+    public function getEntityHolder(): EntityHolderInterface
     {
         return $this->entity;
     }
@@ -41,29 +41,29 @@ abstract class AbstractWorkflow implements WorkflowInterface
     /**
      * @param StateInterface $state
      * @return WorkflowInterface
-     * @throws EntityException
+     * @throws EntityHolderException
      * @throws WorkflowException
      */
     public function setState(StateInterface $state): WorkflowInterface
     {
         try {
-            $this->getEntity()->acquire();
-
             if (!$this->isValidTransition($this->getState(), $state)) {
                 throw new WorkflowException(
-                    sprintf("Invalid transition from %s to %s", $this->getState()->getId(), $state->getId())
+                    sprintf("Invalid transition from %s to %s", $this->getState()->getId(), $state->getId()),
+                    WorkflowException::CODE_INVALID_TRANSITION
                 );
             }
 
+            $this->getEntityHolder()->acquire();
             $this->state = $state;
-        } catch (EntityException $entityException) {
+        } catch (EntityHolderException $entityException) {
             throw new WorkflowException(
                 sprintf("Unable to change workflow state: %s", $entityException->getMessage()),
-                0,
+                WorkflowException::CODE_STATE_CHANGE_FAILED,
                 $entityException
             );
         } finally {
-            $this->getEntity()->release();
+            $this->getEntityHolder()->release();
         }
 
         return $this;
