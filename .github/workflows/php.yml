@@ -48,4 +48,10 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Run test suite
-      run: mkdir -p build/logs && XDEBUG_MODE=coverage php vendor/bin/phpunit -c phpunit.xml.dist
+      run: mkdir -p build/logs && mkdir -p build/html && XDEBUG_MODE=coverage php vendor/bin/phpunit -c phpunit.xml.dist
+
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: build/html

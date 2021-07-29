@@ -6,6 +6,7 @@
     </include>
     <report>
       <clover outputFile="build/logs/clover.xml"/>
+      <html outputDirectory="build/html/"/>
     </report>
   </coverage>
   <testsuite name="Money Workflow tests">
