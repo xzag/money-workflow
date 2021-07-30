@@ -22,4 +22,10 @@ interface CurrencyInterface
      * @return bool
      */
     public function isZeroDecimal(): bool;
+
+    /**
+     * @param CurrencyInterface $currency
+     * @return bool
+     */
+    public function isSame(CurrencyInterface $currency): bool;
 }

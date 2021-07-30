@@ -61,4 +61,14 @@ class Currency implements CurrencyInterface
     {
         return $this->decimalCount === 0;
     }
+
+    /**
+     * @param CurrencyInterface $currency
+     * @return bool
+     */
+    public function isSame(CurrencyInterface $currency): bool
+    {
+        return $this->getISOCode() === $currency->getISOCode()
+            && $this->getDecimalCount() === $currency->getDecimalCount();
+    }
 }

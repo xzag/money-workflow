@@ -5,6 +5,7 @@ namespace Xzag\MoneyWorkflow\Tests\Currency;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Xzag\MoneyWorkflow\Currency\Currency;
+use Xzag\MoneyWorkflow\Currency\CurrencyInterface;
 
 class CurrencyTest extends TestCase
 {
@@ -22,12 +23,51 @@ class CurrencyTest extends TestCase
     }
 
     /**
+     * @param CurrencyInterface $currency
+     * @param CurrencyInterface $anotherCurrency
+     * @param bool $result
+     * @dataProvider getCurrencyPairs()
+     */
+    public function testSameCurrency(CurrencyInterface $currency, CurrencyInterface $anotherCurrency, bool $result)
+    {
+        $this->assertEquals($result, $currency->isSame($anotherCurrency));
+    }
+    /**
      *
      */
     public function testFailedCreate()
     {
         $this->expectException(InvalidArgumentException::class);
         new Currency('code', 20);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getCurrencyPairs(): array
+    {
+        return [
+            [
+                new Currency('RUB', 2),
+                new Currency('RUB', 2),
+                true
+            ],
+            [
+                new Currency('RUB', 0),
+                new Currency('RUB', 2),
+                false
+            ],
+            [
+                new Currency('RUB', 2),
+                new Currency('EUR', 2),
+                false
+            ],
+            [
+                new Currency('RUB', 0),
+                new Currency('USD', 2),
+                false
+            ]
+        ];
     }
 
     /**

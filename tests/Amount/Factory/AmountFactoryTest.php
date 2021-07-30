@@ -2,12 +2,11 @@
 
 namespace Xzag\MoneyWorkflow\Tests\Amount\Factory;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Xzag\MoneyWorkflow\Amount\Exception\InvalidAmountException;
 use Xzag\MoneyWorkflow\Amount\Factory\AmountFactory;
-use Xzag\MoneyWorkflow\Calculator\CalculatorInterface;
 use Xzag\MoneyWorkflow\Currency\CurrencyInterface;
+use Xzag\MoneyWorkflow\Tests\MockHelperTrait;
 
 /**
  * Class AmountFactoryTest
@@ -15,35 +14,19 @@ use Xzag\MoneyWorkflow\Currency\CurrencyInterface;
  */
 class AmountFactoryTest extends TestCase
 {
+    use MockHelperTrait;
+
     /**
      * @var AmountFactory
      */
     private AmountFactory $factory;
 
     /**
-     * @var MockObject|CalculatorInterface
-     */
-    private CalculatorInterface|MockObject $calculator;
-
-    /**
      *
      */
     public function setUp(): void
     {
-        $this->calculator = $this->createMock(CalculatorInterface::class);
-        $this->calculator
-            ->method('pow')
-            ->willReturnCallback(function ($base, $exp) {
-                return (string)pow($base, $exp);
-            });
-
-        $this->calculator
-            ->method('mul')
-            ->willReturnCallback(function ($a, $b) {
-                return (string)($a * $b);
-            });
-
-        $this->factory = new AmountFactory($this->calculator);
+        $this->factory = new AmountFactory();
     }
 
     /**
@@ -67,30 +50,13 @@ class AmountFactoryTest extends TestCase
     }
 
     /**
-     * @param int $decimalCount
-     * @return MockObject|CurrencyInterface
-     */
-    private function createCurrencyMock(int $decimalCount = 0): MockObject|CurrencyInterface
-    {
-        $currency = $this->createMock(CurrencyInterface::class);
-        $currency
-            ->method('isZeroDecimal')
-            ->willReturn($decimalCount === 0);
-        $currency
-            ->method('getDecimalCount')
-            ->willReturn($decimalCount);
-
-        return $currency;
-    }
-
-    /**
      * @return array
      */
     public function getCorrectValues(): array
     {
-        $regularCurrency = $this->createCurrencyMock(2);
-        $strangeCurrency = $this->createCurrencyMock(3);
-        $zeroDecimalCurrency = $this->createCurrencyMock(0);
+        $regularCurrency = $this->createCurrencyMock();
+        $strangeCurrency = $this->createCurrencyMock('CUR', 3);
+        $zeroDecimalCurrency = $this->createCurrencyMock('HUN', 0);
 
         return [
             [
@@ -149,8 +115,8 @@ class AmountFactoryTest extends TestCase
      */
     public function getInvalidValues(): array
     {
-        $regularCurrency = $this->createCurrencyMock(2);
-        $zeroDecimalCurrency = $this->createCurrencyMock(0);
+        $regularCurrency = $this->createCurrencyMock();
+        $zeroDecimalCurrency = $this->createCurrencyMock('TST', 0);
 
         return [
             [

@@ -19,4 +19,16 @@ interface AmountInterface
      * @return CurrencyInterface
      */
     public function getCurrency(): CurrencyInterface;
+
+    /**
+     * @param AmountInterface ...$amounts
+     * @return AmountInterface
+     */
+    public function add(AmountInterface ...$amounts): AmountInterface;
+
+    /**
+     * @param AmountInterface ...$amounts
+     * @return AmountInterface
+     */
+    public function sub(AmountInterface ...$amounts): AmountInterface;
 }

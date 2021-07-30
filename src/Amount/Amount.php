@@ -3,6 +3,7 @@
 namespace Xzag\MoneyWorkflow\Amount;
 
 use Xzag\MoneyWorkflow\Amount\Exception\InvalidAmountException;
+use Xzag\MoneyWorkflow\Amount\Exception\InvalidCurrencyException;
 use Xzag\MoneyWorkflow\Currency\CurrencyInterface;
 
 /**
@@ -32,7 +33,7 @@ class Amount implements AmountInterface
             );
         }
 
-        $this->value = ltrim($value, '0');
+        $this->value = bcadd($value, '0', 0);
     }
 
     /**
@@ -49,5 +50,63 @@ class Amount implements AmountInterface
     public function getCurrency(): CurrencyInterface
     {
         return $this->currency;
+    }
+
+    /**
+     * @param AmountInterface ...$amounts
+     * @return AmountInterface
+     * @throws InvalidAmountException
+     * @throws InvalidCurrencyException
+     */
+    public function add(AmountInterface ...$amounts): AmountInterface
+    {
+        $result = $this->getValue();
+        while ($amount = array_shift($amounts)) {
+            if (!$this->getCurrency()->isSame($amount->getCurrency())) {
+                throw new InvalidCurrencyException(
+                    sprintf(
+                        "Mismatched currencies: %s, %s",
+                        $this->getCurrency()->getISOCode(),
+                        $amount->getCurrency()->getISOCode()
+                    )
+                );
+            }
+
+            $result = bcadd($result, $amount->getValue(), 0);
+        }
+
+        return new Amount(
+            $result,
+            $this->getCurrency()
+        );
+    }
+
+    /**
+     * @param AmountInterface ...$amounts
+     * @return AmountInterface
+     * @throws InvalidAmountException
+     * @throws InvalidCurrencyException
+     */
+    public function sub(AmountInterface ...$amounts): AmountInterface
+    {
+        $result = $this->getValue();
+        while ($amount = array_shift($amounts)) {
+            if (!$this->getCurrency()->isSame($amount->getCurrency())) {
+                throw new InvalidCurrencyException(
+                    sprintf(
+                        "Mismatched currencies: %s, %s",
+                        $this->getCurrency()->getISOCode(),
+                        $amount->getCurrency()->getISOCode()
+                    )
+                );
+            }
+
+            $result = bcsub($result, $amount->getValue(), 0);
+        }
+
+        return new Amount(
+            $result,
+            $this->getCurrency()
+        );
     }
 }
